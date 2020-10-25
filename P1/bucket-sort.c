@@ -4,7 +4,8 @@
 #include <string.h>
 #include <unistd.h>
 #define MAX 3500
-#define HOLGURA 35
+#define HOLGURA 5
+#define MAXRAND 1000
 
 typedef struct intervalo{
     int inf;
@@ -45,7 +46,7 @@ int * generarLista(){
     srand((unsigned) time(&t));
     printf("\nLista completa desordenada\n");
     for(int i = 0; i < MAX; i++){
-        lista[i] = rand() % MAX; // Random de 0 a 999
+        lista[i] = rand() % MAXRAND; // Random de 0 a 999
         printf("%d. ", lista[i]);
     }
     return lista;
@@ -67,10 +68,11 @@ Intervalo * crearIntervalo(int tamArr, int numhilos){
     for (int i = 1; i < numhilos; i++){
         aux[i].inf = tamArr*i + HOLGURA;
         aux[i].sup = tamArr*(i+1) + HOLGURA;
-        /* Imprime los limites de intervalo 
+        /* Imprime los limites de intervalo
         printf("\nInf: %d\n", aux[i].inf);
         printf("Sup: %d\n", aux[i].sup);
         */
+        
     }
     return aux;
 }
@@ -97,11 +99,25 @@ void * ordenar(void * arg){ // Canasta * basket, int size
 
 
 int main(int argc, char const *argv[]){
-    int *lista = generarLista();
-    int salida[MAX];
-
     if(argv[1] > 0){
-        int tamArr = MAX / atoi(argv[1]); // Tamaño maximo del arreglo
+
+        FILE *fptr;
+        int *lista = generarLista();
+        int salida[MAX];
+
+        fptr = fopen("salida.txt", "w");
+        if(fptr == NULL){
+            printf("Error en la creacion de archivo de salida!");   
+            exit(1);             
+        }
+
+        /* Impresion en archivo */
+        fprintf(fptr,"Lista desordenada de %d elementos\n", MAX);
+        for(int i = 0; i < MAX; i++){
+            fprintf(fptr, "%d. ", lista[i]);
+        }
+
+        int tamArr = (MAXRAND) / atoi(argv[1]); // Tamaño del arreglo
         Intervalo *inter = crearIntervalo(tamArr, atoi(argv[1])); // Arreglo de intervalos
         Canasta *basket = malloc(atoi(argv[1]) * sizeof(Canasta)); // Arreglo de canastas
 
@@ -109,10 +125,10 @@ int main(int argc, char const *argv[]){
         int acum[atoi(argv[1])]; // Arreglo de acumuladores para controlar entradas a canasta
 
         for (int i = 0; i < atoi(argv[1]); i++){
-            basket[i] = crearCanasta(inter[i], tamArr+HOLGURA);
+            basket[i] = crearCanasta(inter[i], MAX);
             acum[i] = 0;
         }
-        
+
         for(int i = 0; i < MAX; i++){
             numcan = determinarCanasta(inter, atoi(argv[1]), lista[i]);
             basket[numcan].entrada[acum[numcan]] = lista[i];
@@ -125,7 +141,7 @@ int main(int argc, char const *argv[]){
             basket[i].size = acum[i];
         }
         
-        /* Muestra los elementos por canasta de forma desordenada
+        /* Muestra los elementos por canasta de forma desordenada 
         printf("\nDesordenados.\n");
         for(int i = 0; i < atoi(argv[1]); i++){
             printf("\nCanasta %d\n", i);
@@ -134,7 +150,7 @@ int main(int argc, char const *argv[]){
             }
         }
         */
-        
+
         /* Creacion de hilos */
         pthread_t hilo[atoi(argv[1])];
         for(int i = 0; i < atoi(argv[1]); i++){
@@ -153,12 +169,16 @@ int main(int argc, char const *argv[]){
         */
 
         printf("\n\nLista completa ordenada\n");
-        // Reconstruccion de arreglo ordenado 
+        fprintf(fptr, "\n\nLista ordenada:\n"); 
+
+        // Reconstruccion de arreglo ordenado
         for(int i = 0; i < atoi(argv[1]); i++){
             for(int j = 0; j < basket[i].size; j++){
-                printf("%d. ", basket[i].entrada[j]);
+                printf("%d. ", basket[i].entrada[j]); // A consola
+                fprintf(fptr, "%d. ", basket[i].entrada[j]); // A archivo
             }
         }
+        fclose(fptr);
     }
     else{
         printf("ERROR: Ingresa un numero valido de canastas");
