@@ -117,7 +117,7 @@ int main(int argc, char const *argv[]){
             fprintf(fptr, "%d. ", lista[i]);
         }
 
-        int tamArr = (MAXRAND) / atoi(argv[1]); // Tamaño del arreglo
+        int tamArr = (MAXRAND / atoi(argv[1])) + HOLGURA; // Tamaño del arreglo
         Intervalo *inter = crearIntervalo(tamArr, atoi(argv[1])); // Arreglo de intervalos
         Canasta *basket = malloc(atoi(argv[1]) * sizeof(Canasta)); // Arreglo de canastas
 
@@ -129,13 +129,15 @@ int main(int argc, char const *argv[]){
             acum[i] = 0;
         }
 
+        /* Asigno los numeros desordenados a sus respectivas canastas */
         for(int i = 0; i < MAX; i++){
             numcan = determinarCanasta(inter, atoi(argv[1]), lista[i]);
             basket[numcan].entrada[acum[numcan]] = lista[i];
             //printf("%d. ", numcan);
             acum[numcan]++;
         }
-              
+        
+        /* Reasigno el tamaño justo de los arreglos por canasta*/
         for(int i = 0; i < atoi(argv[1]); i++){
             basket[i].entrada = arrayJusto(basket[i].entrada, acum[i]);
             basket[i].size = acum[i];
