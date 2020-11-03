@@ -64,32 +64,36 @@ public class PantallaInicial extends JFrame implements ActionListener{
         try{
             if(sauce == btn){
                 cantHilos = Integer.parseInt(tf.getText());
-                PantallaBusqueda arrayhilos[] = new PantallaBusqueda[cantHilos];
+                HiloBusqueda arrayhilos[] = new HiloBusqueda[cantHilos];
+                String path = "./busqueda";
                 setVisible(false);
                 
-                for(int i = 0; i < cantHilos; i++)
-                    arrayhilos[i] = new PantallaBusqueda(cantHilos, "/test");
-                
-                for(int i = 0; i < cantHilos; i++){
-                    if(i == 0){ // El primero
-                        arrayhilos[i].setAnt(arrayhilos[cantHilos-1]);
-                        arrayhilos[i].setSig(arrayhilos[i+1]);
-                    }
-                    else if(i == cantHilos-1){ // El ultimo
-                        arrayhilos[i].setAnt(arrayhilos[i-1]);
-                        arrayhilos[i].setSig(arrayhilos[0]);
-                    }
-                    else{ // Cualquier otro caso
-                        arrayhilos[i].setAnt(arrayhilos[i-1]);
-                        arrayhilos[i].setSig(arrayhilos[i+1]);
-                    }
+                for(int i = 0; i< cantHilos; i++){
+                    arrayhilos[i] = new HiloBusqueda();
                 }
                 
-                for(int i = 0; i < cantHilos; i++)
+                for(int i = 0; i < cantHilos; i++){
+                    path = path + "/" + i;
+                    if(i == 0){ // El primero
+                        //arrayhilos[i] = new HiloBusqueda(path, arrayhilos[cantHilos-1], arrayhilos[i+1], cantHilos);
+                        arrayhilos[i].setHiloAnt(arrayhilos[cantHilos-1]);
+                        arrayhilos[i].setHiloSig(arrayhilos[i+1]);
+                    }
+                    else if(i == cantHilos-1){ // El ultimo
+                        arrayhilos[i].setHiloAnt(arrayhilos[i-1]);
+                        arrayhilos[i].setHiloSig(arrayhilos[0]);
+                    }
+                    else{ // Cualquier otro caso
+                        arrayhilos[i].setHiloAnt(arrayhilos[i-1]);
+                        arrayhilos[i].setHiloSig(arrayhilos[i+1]);
+                    }
+                    arrayhilos[i].setPath(path);
+                    arrayhilos[i].setHilosAct(cantHilos);
                     arrayhilos[i].start();
+                }
             }
         }catch(NumberFormatException ex){
-            JOptionPane.showMessageDialog(null, "Siguele de pinche chistosito");
+            JOptionPane.showMessageDialog(null, "Ingresa un valor numerico");
         }
     }
 }
