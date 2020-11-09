@@ -53,12 +53,12 @@ public class HiloBusqueda extends Thread implements ActionListener{
     
     public synchronized void recibePeticion(HiloBusqueda hilo_origen, HiloBusqueda hilo_solicitante, HiloBusqueda hilo_destino, String filename){
         if(hilo_origen.equals(hilo_destino)){
-            hilo_origen.getView().getMensajes().append("Anillo recorrido, archivo no encontrado");
+            hilo_origen.getView().getMensajes().append("Anillo recorrido, archivo no encontrado\n");
         }
         else{
             hilo_destino.getView().getMensajes().append("Buscar: " + filename + " sol->" + (getId()) + "\n");
             if(hilo_destino.buscarArchivo(filename)){
-                hilo_destino.getView().getMensajes().append("***Archivo encontrado: " + hilo_destino.getPath());
+                hilo_destino.getView().getMensajes().append("***Archivo encontrado: " + hilo_destino.getPath() + "\n");
                 getHiloAnt().devolverRespuesta(hilo_origen, this, hilo_destino, hilo_destino.getPath());
             }
             else{
@@ -70,7 +70,7 @@ public class HiloBusqueda extends Thread implements ActionListener{
     
     public synchronized void devolverRespuesta(HiloBusqueda hilo_origen, HiloBusqueda hilo_anterior, HiloBusqueda hilo_enc, String path){
         if(hilo_origen.equals(hilo_anterior)){
-            hilo_origen.getView().getMensajes().append("Anillo recorrido.\n>>> Encontrado en: " + path);
+            hilo_origen.getView().getMensajes().append("Anillo recorrido.\n>Encontrado por " + hilo_enc.getId() + " en: " + path + "\n");
         }
         else{
             hilo_anterior.getView().getMensajes().append("--> Encontrado por " + hilo_enc.getId() + "\nEn: " + path);
@@ -90,7 +90,7 @@ public class HiloBusqueda extends Thread implements ActionListener{
     public synchronized void actionPerformed(ActionEvent ae) {
         String filename = view.getNombreField().getText();
         if(buscarArchivo(filename)){
-            view.getMensajes().append("Encontre el archivo en" + path);
+            view.getMensajes().append("Encontre el archivo en" + path + "\n");
         }
         else{
             view.getMensajes().append("No encontrado. Llamando->"+hiloSig.getId() + "\n");
