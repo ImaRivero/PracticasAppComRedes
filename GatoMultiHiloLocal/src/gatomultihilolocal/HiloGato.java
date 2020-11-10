@@ -49,7 +49,7 @@ public class HiloGato extends Thread implements ActionListener{
                 sh.esperaLectura();
                 btn = sh.getSh_button();
                 
-                if(btn.getOwner() != idPlayer){
+                //if(btn.getOwner() != idPlayer){
                     array_bg = tab.getBotones();
                     array_bg[Integer.parseInt(btn.getName())].setCheck(btn.isCheck());
                     array_bg[Integer.parseInt(btn.getName())].setOwner(btn.getOwner());
@@ -67,24 +67,24 @@ public class HiloGato extends Thread implements ActionListener{
                         } else {
                             JOptionPane.showMessageDialog(null, "Mejor suerte la proxima. Ha ganado: " + win);
                         }
+                        //sh.avisaTurno();
                         gameover = true;
                         tab.setVisible(false);
                     }
 
                     if (empate(array_bg)) {
                         JOptionPane.showMessageDialog(null, "EMPATE. Fin del juego c:");
+                        //sh.avisaTurno();
                         gameover = true;
                         tab.setVisible(false);
                     }
+                //}
+                if(btn.getOwner() == idPlayer){
+                    sh.alternaTurno(array_bg);
+                    bloquearBotones(array_bg);
                 }
                 else
-                    sh.alternaTurno(array_bg);
-                
-                /*
-                if(btn.getOwner() == idPlayer)
-                    sh.alternaTurno(array_bg);
-                */
-                
+                    activaBotones(array_bg);
             }
         } finally {
             lock.unlock();

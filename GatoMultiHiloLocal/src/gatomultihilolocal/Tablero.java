@@ -71,17 +71,6 @@ public class Tablero extends JFrame{
         return botones;
     }
 
-    public void setBotones(BotonGato[] botones) {
-        this.botones = botones;
-    }
-
-    public ArrayList<BotonGato> getBtn_cat() {
-        return btn_cat;
-    }
-
-    public void setBtn_cat(ArrayList<BotonGato> btn_cat) {
-        this.btn_cat = btn_cat;
-    }
 }
 
 class BotonGato extends JButton{
