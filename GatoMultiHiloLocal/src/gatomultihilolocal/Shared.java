@@ -34,6 +34,7 @@ public class Shared {
         condTurno = false;
         esperando = false;
         hg = new HiloGato(0, 0, this);
+        sh_button = new BotonGato();
     }
     
     public void esperaLectura(){
@@ -53,10 +54,17 @@ public class Shared {
     public BotonGato getSh_button() {
         lock.lock();
         try {
-            available = false;
+            available = false;/*
+            try {
+                condLect.awaitNanos(500000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Shared.class.getName()).log(Level.SEVERE, null, ex);
+            }*/
+        
         } finally {
             lock.unlock();
         }
+        System.out.println("Get " + sh_button.getName());
         return sh_button;
     }
 
@@ -65,7 +73,7 @@ public class Shared {
         try{
             while (available) {
                 try {
-                    condT.await();
+                    condLect.await();
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Shared.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -85,7 +93,7 @@ public class Shared {
 
     public void alternaTurno(BotonGato[] bg){
         lock.lock();
-        condTurno = true;
+        //condTurno = true;
         esperando = true;
         try {
             try {
@@ -94,6 +102,7 @@ public class Shared {
                     hg.bloquearBotones(bg);
                     condT.await();
                     hg.activaBotones(bg);
+                    //condT.awaitNanos(50000);
                     condTurno = false;
                 }
             } catch (InterruptedException ex) {
@@ -110,10 +119,17 @@ public class Shared {
         try {
             if(esperando){
                 //condT.awaitNanos(5000);
+                /*
+                try {
+                    condT.awaitNanos(50);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Shared.class.getName()).log(Level.SEVERE, null, ex);
+                }*/
                 condT.signal();
                 condTurno = false;
             }
             condTurno = true;
+            //esperando = true;
         } finally {
             lock.unlock();
         }

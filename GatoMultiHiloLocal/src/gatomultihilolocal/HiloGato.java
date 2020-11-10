@@ -45,34 +45,40 @@ public class HiloGato extends Thread implements ActionListener{
         try {
             tab = new Tablero(idPartida, idPlayer, this);
             while(!gameover){
+                
                 sh.esperaLectura();
                 btn = sh.getSh_button();
                 
-                array_bg = tab.getBotones();
-                array_bg[Integer.parseInt(btn.getName())].setCheck(btn.isCheck());
-                array_bg[Integer.parseInt(btn.getName())].setOwner(btn.getOwner());
-                
-                if(btn.getOwner() == 1)
-                    array_bg[Integer.parseInt(btn.getName())].setIcon(icop1);
+                if(btn.getOwner() != idPlayer){
+                    array_bg = tab.getBotones();
+                    array_bg[Integer.parseInt(btn.getName())].setCheck(btn.isCheck());
+                    array_bg[Integer.parseInt(btn.getName())].setOwner(btn.getOwner());
+
+                    if (btn.getOwner() == 1) {
+                        array_bg[Integer.parseInt(btn.getName())].setIcon(icop1);
+                    } else {
+                        array_bg[Integer.parseInt(btn.getName())].setIcon(icop2);
+                    }
+
+                    win = ganador(array_bg);
+                    if (win != 0) {
+                        if (win == idPlayer) {
+                            JOptionPane.showMessageDialog(null, "Felicidades has ganado player: " + idPlayer);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Mejor suerte la proxima. Ha ganado: " + win);
+                        }
+                        gameover = true;
+                        tab.setVisible(false);
+                    }
+
+                    if (empate(array_bg)) {
+                        JOptionPane.showMessageDialog(null, "EMPATE. Fin del juego c:");
+                        gameover = true;
+                        tab.setVisible(false);
+                    }
+                }
                 else
-                    array_bg[Integer.parseInt(btn.getName())].setIcon(icop2);
-                
-                
-                win = ganador(array_bg);
-                if(win != 0){
-                    if(win == idPlayer)
-                        JOptionPane.showMessageDialog(null, "Felicidades has ganado player: " + idPlayer);
-                    else
-                        JOptionPane.showMessageDialog(null, "Mejor suerte la proxima. Ha ganado: " + win);
-                    gameover = true;
-                    tab.setVisible(false);
-                }
-                
-                if(empate(array_bg)){
-                    JOptionPane.showMessageDialog(null, "EMPATE. Fin del juego c:");
-                    gameover = true;
-                    tab.setVisible(false);
-                }
+                    sh.alternaTurno(array_bg);
                 
                 /*
                 if(btn.getOwner() == idPlayer)
@@ -98,7 +104,7 @@ public class HiloGato extends Thread implements ActionListener{
             }
             bg.setCheck(true);
             bg.setOwner(idPlayer);
-            //sh.avisaTurno();
+            sh.avisaTurno();
             sh.setSh_button(bg);
         }
         else
