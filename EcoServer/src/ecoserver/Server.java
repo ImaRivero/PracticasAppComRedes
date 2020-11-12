@@ -26,6 +26,8 @@ public class Server {
                 /* Recibimos mensaje del cliente */
                 BufferedReader in = new BufferedReader(new InputStreamReader(cl.getInputStream()));
                 String mensaje = in.readLine();
+                System.out.println("Cliente: " + cl.getInetAddress());
+                System.out.print("\t> " + mensaje + "\n");
                 /* Hacemos eco */
                 PrintWriter out = new PrintWriter(new OutputStreamWriter(cl.getOutputStream()));
                 out.println(mensaje);
