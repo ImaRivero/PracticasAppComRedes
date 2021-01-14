@@ -18,6 +18,11 @@ public class SArchTCPB {
         try{
             // Creamos el socket
             ServerSocket s = new ServerSocket(7000);
+            System.out.println("OK");
+            File f = new File("./ArchivosRecibidos");
+            if(f.mkdir())
+                System.out.println("Directorio creado!");
+            
             // Iniciamos el ciclo infinito del servidor
             for(;;){
                // Esperamos una conexión 
@@ -28,6 +33,10 @@ public class SArchTCPB {
                 
                 int buffer_size = dis.readInt();
                 System.out.println("Tamaño del buffer " + buffer_size);
+                boolean nagle = dis.readBoolean();
+                System.out.println("Usar nagle? " + nagle);
+                if(nagle)
+                    cl.setTcpNoDelay(nagle);
                 int file_num = dis.readInt();
                 System.out.println("Numero de archivos " + file_num);
                 System.out.println("----------------------------------------------");
@@ -39,6 +48,7 @@ public class SArchTCPB {
                     long tam = dis.readLong();
                     System.out.println("Recibiremos: " + nombre + " con " + tam + " bytes");
                     
+                    nombre = "./ArchivosRecibidos/" + nombre;
                     DataOutputStream dos_file = new DataOutputStream(new FileOutputStream(nombre));
                     long recibidos = 0;
                     int n, porcentaje;
@@ -50,7 +60,7 @@ public class SArchTCPB {
                         porcentaje = (int) (recibidos * 100 / tam);
                         System.out.println("Recibido: " + porcentaje + "%\r");
                     }//While
-                    System.out.println("Archivo recibido.\n");
+                    System.out.println("\nArchivo recibido.\n");
                     dos.writeBoolean(true);
                     dos_file.close();
                     System.out.println("----------------------------------------------");

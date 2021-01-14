@@ -14,3 +14,7 @@
 /ChatMulticastNB/nbproject/private/
 /ChatMulticastNB/build/
 
+/ChatMulticastNB/dist/
+/FileTransferService/nbproject/private/
+/FileTransferService/dist/
+/FileTransferService/build/

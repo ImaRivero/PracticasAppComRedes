@@ -9,6 +9,20 @@ package net;
  *
  * @author omari
  */
-public class conexion {
+public class conexion implements Runnable{
+    
+    public void conectar(){
+        
+    }
+    
+    public void desconectar(){
+        
+    }
+    
+    
+    @Override
+    public void run() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }
