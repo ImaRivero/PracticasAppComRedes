@@ -55,7 +55,7 @@ public class Server extends Thread{
                 System.out.println(entrada);
                 if(entrada.contains("<inicio>"))
                     agregarUser(entrada);
-                if(entrada.contains("fin"))
+                if(entrada.contains("<fin>"))
                     borrarUser(entrada);
                 socket.close();
             } catch (IOException ex) {
@@ -84,6 +84,7 @@ public class Server extends Thread{
         for(int i = 0; i < lista_usuarios.size(); i++){
             msj_out += lista_usuarios.get(i) + ",";
         }
+        System.out.println(lista_usuarios);
         msj_out = msj_out.replace(" ", "");
     }
     
